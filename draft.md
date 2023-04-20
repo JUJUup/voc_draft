@@ -3,7 +3,7 @@ bibliography: [draft.bib]
 CJKmainfont: PingFang SC
 ---
 
-### Introduction
+### 1. Introduction
 
 In recent years, the world has witnessed China's rapid economic development, especially in the eastern coastal city clusters. Due to active industrial activities, rapid urban construction, dense population, and other factors, the coastal city clusters have not only become a catalyst for China's economic takeoff, but also brought serious air quality problems,  troposphere ozone pollution is a typical example. This demands for the accuracy of air quality numerical model prediction.
 
@@ -17,23 +17,23 @@ Li 2014等在MEIC源排放清单上实现了与几个主流气相化学模式的
 
 目前还没有建立VOCs的常规业务化观测，并且据[@Koohkan_2013]，VOCs的观测由于其生命周期很短，限制了同化的空间半径，即使有稀疏的观测也难以达到理想的效果。这使得我们现阶段只能使用其他的常规观测污染物来尝试同化VOCs。
 
-### Modeling System
+### 2. Modeling System
 
-#### WRF-Chem model setting
+#### 2.1 WRF-Chem model setting
 
-#### DA setting
+#### 2.2 DA setting
 
-### Observations
+### 3. Observations
 
-#### Meteo
+#### 3.1 Meteo
 
-#### Chem
+#### 3.2 Chem
 
-#### Emission
+#### 3.3 Emission
 
 ####  
 
-### Experiment Design
+### 4. Experiment Design
 
 We set Meteo Observation assimilate Meteo state variable, six main air pollution's Observation assimilate their own model state variable and emission scaling factor as control experiment(CTRL), which has been proved to be capable of  generating relatively good results in analysis and forecast(see, Peng2020). 
 
@@ -46,7 +46,7 @@ Previous works tend to use ozone observation to assimilate VOCs(Tang2011, Ma2019
 | O3_5pct  | ^           |
 | All_5pct | ^           |
 
-#### VOC Factor
+#### 4.1 VOC Factor
 
 Define:
 $$
