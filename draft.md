@@ -2,42 +2,62 @@
 bibliography: [draft.bib]
 CJKmainfont: PingFang SC
 ---
+# VOCs draft
 
-### 1. Introduction
+## 1. Introduction
 
-In recent years, the world has witnessed China's rapid economic development, especially in the eastern coastal city clusters. Due to active industrial activities, rapid urban construction, dense population, and other factors, the coastal city clusters have not only become a catalyst for China's economic takeoff, but also brought serious air quality problems,  troposphere ozone pollution is a typical example. This demands for the accuracy of air quality numerical model prediction.
+(Note: is it needed to address 'Ozone'? maybe we can mention NMVOC more.)
+Troposhere ozone has been viewed as a critical component in air pollution for being a threat to human body. Recent years, due to active industrial activities, rapid urban construction, dense population, and many other factors, the coastal city clusters have not only become a catalyst for China's economic takeoff, but also brought serious air quality problems,  and troposphere ozone pollution is a typical example. This demands for higher accuracy in air quality numerical model prediction. (Note: need much more polish ... )
 
-但是，因为源排放的不确定性，参数化方案，气象场与化学场的初始/边界条件误差等问题，许多空气质量模型都不能达到令人满意的预报精度。当视角转变到Ozone预报上，情况将更加复杂，因为Ozone前体物的组成和来源繁多，化学方案以及源排放清单上就有可观的误差，并且Ozone的生命周期较长，气象场的transport效应明显，因此，Ozone预报面临着来自气象和化学双重的不确定性(warning: where does it come from???)。源排放对空气质量模式的预报精度影响巨大Sandu2011，Elbern2007通过同时同化初始场和源排放场，很好的改进了模式的预报结果。源排放场对于Ozone预报的影响同样明显，城市短期Ozone预报的一个重要的不确定性来源就是前体物(如NOx NMVOCs)的源[@Tang_2011]。其中，NMVOCs的源排放清单由于其种类繁多，不同的气相化学方案都对VOCs进行了不同的分类（lump），而初始的源排放清单一般只提供NMVOCs的总量（eg. EDGAR），并没有通用的emission inventory->model-ready emission file的routine，因此在NMVOCs的model-ready的源排放处理上一直存在巨大的误差。
+但是，因为源排放的不确定性，参数化方案，气象场与化学场的初始/边界条件误差等问题，许多空气质量模型都不能达到令人满意的预报精度(warning: suspicious, need accurate cite)。数据同化在air quality model中已经有了广泛的应用。Filtering approach [@Schwartz_2012; @Pagowski_2012; @Peng_2017, @Kou_2021]，Variational [@Elbern_2007; @Pagowski_2010; @Liu_2011], hybird method [@Schwartz_2014]. 源排放对空气质量模式的预报精度影响巨大[@Sandu_2011]，通过同时同化chem ic and emission，可以更好地的改进模式的预报结果[@Elbern_2007]。top-down的源排放处理。
 
-数据同化在空气质量模式中已经有了广泛的应用。ENKF，Variational，Pagowski2010，Schwarz2012，2014等。
+当视角转变到Ozone预报上，情况将更加复杂，因为控制模式Ozone预报的factor种类繁多，模式气相化学方案，输运过程，前体物源排放都会对Ozone造成影响，其中，源排放对于Ozone预报的影响格外明显[@Monks_2015]。城市短期Ozone预报的一个重要的不确定性来源就是前体物(mainly,NOx,CO,NMVOCs)的源[@Tang_2011; @Tang_2010]。在Ozone的前体物中，NMVOCs具有很大的不确定性，这种不确定性不仅体现在emission的总量上，也体现在NMVOC speciation上[@Li_2017]。具体来说，模式中不同的气相化学方案都对VOCs进行了不同的分类(lumped together according to their similarities in chemical structure or reactivity), but these speciation almost always differ from inventories, which introduces extra uncertainty. This speciation uncertainty will greatly affect model performance, and many efforts have been devoted to construct a better mapping between inventory and model-ready emission[@Li_2014]. But in data assimilation，uncertainty of NMVOCs speciation haven't got enough attention, previous studies usually treat NMVOCs as a unity and give them equal increments(eg. [@Ma_2019, @Tang_2011]). (......) NMVOC is critical for ozone forecasting, and current assimilation method still remains large uncertainty.
 
-top-down的源排放处理。
+目前还没有建立NMVOCs的常规业务化观测，并且据[@Koohkan_2013]，VOCs的观测由于其生命周期很短，限制了同化的空间半径，在使用空间分辨率较大的模式时，即使有稀疏的观测也难以达到理想的效果。这使得我们现阶段只能使用其他的常规观测污染物来尝试同化VOCs。
 
-Li 2014等在MEIC源排放清单上实现了与几个主流气相化学模式的直接对接，使得NMVOCs的源排放精度得到显著提高。但是，之前的许多实验中都没有对NMVOCs以及源进行细致的分别同化(eg. Ma2019, Tang2011, Peng etc. )，这实际上是浪费了Li等对VOCs细致分类的信息。因此，我们这里试图解决这个问题。
+## 2. Model configurations and data assimilation system
 
-目前还没有建立VOCs的常规业务化观测，并且据[@Koohkan_2013]，VOCs的观测由于其生命周期很短，限制了同化的空间半径，即使有稀疏的观测也难以达到理想的效果。这使得我们现阶段只能使用其他的常规观测污染物来尝试同化VOCs。
+Version 3.6.1 of the WRF-Chem model was used, which is an 'online' model with fully-coupled chemical and meteorological fields[@Grell_2005]. The EnSRF[@Whitaker_2002] with its expansion to chem component[@Schwartz_2014; @Peng_2017] is chosen to construct the data assimilation system. Section 2.1 and 2.2 will expand their settings more specificly.
 
-### 2. Modeling System
+### 2.1. WRF-Chem model setting
 
-#### 2.1 WRF-Chem model setting
+Table1 for wrf-chem paramenterization setting. See [@Peng_2018] for an example.
+Table2 for RADM2 NMVOCs speciation in model. (14 VOCs we use).
 
-#### 2.2 DA setting
+Figure for domain setting and chem observation station distribution.
 
-### 3. Observations
+![domain_station_fig](./figure/domain_station.png)
 
-#### 3.1 Meteo
+The update of source emissions through assimilation of chemical observations follows[@Peng_2017], detailed description will not expand here.
 
-#### 3.2 Chem
+### 2.2. data assimilation setting
 
-#### 3.3 Emission
+## 3. Observations
 
-####  
+### 3.1. Meteo
 
-### 4. Experiment Design
+### 3.2. Chem
 
-We set Meteo Observation assimilate Meteo state variable, six main air pollution's Observation assimilate their own model state variable and emission scaling factor as control experiment(CTRL), which has been proved to be capable of  generating relatively good results in analysis and forecast(see, Peng2020). 
+### 3.3. Emission
 
-Previous works tend to use ozone observation to assimilate VOCs(Tang2011, Ma2019). H
+Mainland China: The hourly prescribed anthropogenic emission is obtained from the Multi‐resolution Emission Inventory for China (MEIC v1.3) [@Li_2017; @Zheng_2018] in July 2017, which is the most updated dataset. In areas out of mainland china, we use EDGARv6.1 in July 2017.
+
+## 4. Experiment Design
+
+### 4.1. 30-day free forecast
+
+### 4.2 VOC Factor
+
+Define:
+$$
+factor = corr*(norm(conc)-norm(emiss))
+$$
+
+### 4.3. cycling and forecast setting
+
+We set Meteo Observation assimilate Meteo state variable, six main air pollution's Observation assimilate their own model state variable and emission scaling factor as control experiment(CTRL), which has been proved to be capable of generating relatively good results in analysis and forecast[@Peng_2020].
+
+Previous works tend to use ozone observation to assimilate VOCs[@Tang_2011; @Ma_2019]. 
 
 |          | VOC Species |
 | -------- | ----------- |
@@ -46,13 +66,9 @@ Previous works tend to use ozone observation to assimilate VOCs(Tang2011, Ma2019
 | O3_5pct  | ^           |
 | All_5pct | ^           |
 
-#### 4.1 VOC Factor
+## 5. Results
 
-Define:
-$$
-factor = corr*(norm(conc)-norm(emiss))
-$$
-
+## 6. Summary and discussion
 
 ## 一些可以用到的结论
 
