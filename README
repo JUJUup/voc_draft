@@ -1,4 +1,0 @@
-draft.md: main part
-draft.bib: my cite lib
-draft.pdf: preview pdf
-md2pdf: cmd turn draft.md -> draft.pdf. need pandoc
