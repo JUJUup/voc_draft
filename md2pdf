@@ -1,3 +1,0 @@
-#!/bin/sh
-# cmd turn draft.md -> draft.pdf. need pandoc
-pandoc draft.md --pdf-engine=xelatex --citeproc -o draft.pdf
