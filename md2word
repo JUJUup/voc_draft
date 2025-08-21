@@ -1,0 +1,3 @@
+#!/bin/sh
+# cmd turn draft.md -> draft.pdf. need pandoc
+pandoc draft.md -o draft.docx --reference-doc=./templates_中文.docx
